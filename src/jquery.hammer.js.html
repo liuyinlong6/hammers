@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>hammer.js使用测试</title>
+	<style>
+		#test{
+			width: 200px;
+			height: 200px;
+			background-color: red;
+			position: absolute;
+			top: 50px;
+			left:20px;
+		}
+	</style>
+</head>
+<body>
+	<h1 id="box">欢迎大家</h1>
+	<p id="test"></p>
+</body>
+</html>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
+<script type="text/javascript" src="js/jquery.hammer.js"></script>
+<script type="text/javascript">
+var hammer = $("#test").hammer();
+hammer.on("panstart",function(ev){
+	console.log("拖动开始");
+	console.log(ev);
+});
+hammer.on("panmove",function(ev){
+	console.log("拖动中");
+	console.log("x坐标"+ev.gesture.deltaX);
+	console.log("y坐标"+ev.gesture.deltaY);
+	$("#test").css("top",ev.gesture.deltaY+"px");
+	$("#test").css("left",ev.gesture.deltaX+"px");
+});
+hammer.on("panend",function(ev){
+	console.log("拖动结束");
+	console.log(ev);
+});
+</script>

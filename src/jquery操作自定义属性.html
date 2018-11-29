@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.box{
+			width: 100px;
+			height: 100px;
+			position: absolute;
+			left: 20px;
+			top: 20px;
+			background-color: red;
+			z-index: 2;
+		}
+		.parent{
+			border: 1px solid #000;
+			width: 101px;
+			height: 101px;
+			position: absolute;
+			left: 140px;top: 200px;
+			z-index: 1;
+		}
+	</style>
+</head>
+<body>
+	<div class="box" data-top="" data-left="">
+
+	</div>
+	<div class="parent" id="foot"></div>
+</body>
+</html>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
+<script type="text/javascript" src="js/jquery.hammer.js"></script>
+<script type="text/javascript">
+var box = document.getElementsByTagName('div')[0];
+var hammer = $("div.box").hammer();
+hammer.on("panstart",function(ev){
+	//jquery的offset()获取当前对象的偏移量
+	//offset()获取当前对象相对于文档的偏移
+	console.log($(this).offset());
+	$(this).attr("data-top",$(this).offset().top);
+	$(this).attr("data-left",$(this).offset().left);
+	// $(this).data("top",$(this).offset().top);
+	// $(this).data("left",$(this).offset().left);
+	// 利用data()读取和设置对象属性的特点，直接将对象保存到data-position中
+	$(this).data("position",$(this).offset());
+});
+hammer.on("panmove",function(ev){
+	//移动距离放在ev.gesture.deltaX和ev.gesture.deltaX
+	console.log(ev);
+	var top = $(this).data("position").top;
+	var left = $(this).data("position").left;
+	$(this).css({
+		"top":top+ev.gesture.deltaY,
+		"left":left+ev.gesture.deltaX
+	})
+});
+hammer.on("panend",function(ev){
+	// console.log("box的top偏移量："+$(this).data("position").top);
+	// console.log("box的left偏移量："+$(this).data("position").left);
+	// 获取移动元素的中心点坐标：
+	// var centerX = 绝对定位坐标x+(移动距离)+宽度的一半
+	// var centerY = 绝对定位坐标y+(移动距离)+宽度的一半
+	// 获取box的top，left
+	var _t = $(this).data("position").top+ev.gesture.deltaY;
+	var _l = $(this).data("position").left+ev.gesture.deltaX;
+	var centerY = $(this).data("position").top+(ev.gesture.deltaY)+50.5;
+	var centerX = $(this).data("position").left+(ev.gesture.deltaX)+50.5;
+	//获取parent的位置
+	var parent_t = $("#foot").offset().top;
+	var parent_l = $("#foot").offset().left;
+	var parent_r = parent_l+101;
+	var parent_f = parent_t+101;
+	// if (centerX>parent的左边 而且 小于parent的右边 而且 centerY大于 parent的上边 而且 小于 parent的下边) {
+	// 	console.log("移动到parent里面了")
+	// };
+	if(parent_f>centerY&&parent_r>centerX&&parent_l<centerX&&parent_t<centerY){
+		console.log("移动到parent里面了");
+	}
+	console.log(centerX,centerY);
+	console.log(parent_t,parent_l,parent_r,parent_f);
+});
+</script>
